@@ -86,6 +86,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: build
+          rust-toolchain: "1.99.0"
           target: ${{ matrix.target }}
           manylinux: ${{ matrix.manylinux }}
           args: --release --locked --compatibility pypi --out dist
@@ -110,6 +111,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: sdist
+          rust-toolchain: "1.99.0"
           args: --out dist
 
       - name: Upload source distribution
