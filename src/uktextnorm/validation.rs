@@ -101,7 +101,7 @@ pub(crate) fn valid_isbn(value: &str) -> bool {
             .enumerate()
             .map(|(i, b)| u32::from(b - b'0') * if i % 2 == 0 { 1 } else { 3 })
             .sum();
-        return sum % 10 == 0;
+        return sum.is_multiple_of(10);
     }
     false
 }
@@ -190,18 +190,10 @@ pub(crate) fn valid_luhn(value: &str) -> bool {
         .enumerate()
         .map(|(i, &d)| {
             let d = u32::from(d);
-            if i % 2 == 1 {
-                if d * 2 > 9 {
-                    d * 2 - 9
-                } else {
-                    d * 2
-                }
-            } else {
-                d
-            }
+            if i % 2 == 1 { if d * 2 > 9 { d * 2 - 9 } else { d * 2 } } else { d }
         })
         .sum();
-    sum % 10 == 0
+    sum.is_multiple_of(10)
 }
 
 pub(crate) fn valid_vin_checksum(value: &str) -> bool {

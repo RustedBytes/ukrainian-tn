@@ -8,8 +8,8 @@ use std::sync::LazyLock;
 use crate::uktextnorm::lexicon::Forms;
 use crate::uktextnorm::morphology::plural;
 use crate::uktextnorm::numbers::{
-    decimal_to_words, hours_words, minutes_words, number_to_words, number_words_for_gender,
-    ordinal_words, MINUTE_FORMS, SECOND_FORMS,
+    MINUTE_FORMS, SECOND_FORMS, decimal_to_words, hours_words, minutes_words, number_to_words,
+    number_words_for_gender, ordinal_words,
 };
 use crate::uktextnorm::patterns::{DATE_DAY_RANGE_RE, DATE_SPELLED_RE, MONTH_ALT};
 use crate::uktextnorm::re::{cap, compile, compile_i, matched, sub, sub_ctx, whole};
@@ -93,15 +93,7 @@ fn month_nominative(token: &str) -> String {
 /// Two-digit years below 50 belong to this century.
 fn expand_short_year(year: &str) -> u64 {
     let value = parse_u64(year);
-    if year.len() == 2 {
-        if value < 50 {
-            2000 + value
-        } else {
-            1900 + value
-        }
-    } else {
-        value
-    }
+    if year.len() == 2 { if value < 50 { 2000 + value } else { 1900 + value } } else { value }
 }
 
 /// The state the date passes share, so the closures stay readable.
@@ -262,11 +254,7 @@ pub(crate) fn normalize_dates(
                 ));
             }
         }
-        if parts.is_empty() {
-            whole(m).to_owned()
-        } else {
-            parts.join(" ")
-        }
+        if parts.is_empty() { whole(m).to_owned() } else { parts.join(" ") }
     });
 
     static ISO_WEEK: LazyLock<Regex> =
@@ -296,7 +284,8 @@ pub(crate) fn normalize_dates(
     let text = sub(&text, &ISO_ORDINAL_DATE, |m| {
         let year = parse_u64(cap(m, 1));
         let day = parse_u64(cap(m, 2));
-        let leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+        let leap =
+            year.is_multiple_of(4) && (!year.is_multiple_of(100) || year.is_multiple_of(400));
         if day < 1 || day > if leap { 366 } else { 365 } {
             return whole(m).to_owned();
         }

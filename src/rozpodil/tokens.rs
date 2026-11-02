@@ -2,10 +2,10 @@
 
 use super::abbrev;
 use super::chars::{
-    codepoints, is_alpha, is_digit, is_inner_uk_apostrophe, is_latin, is_space, is_uk,
-    is_word_mark, lower_ascii_ukrainian, smile_at, Cp,
+    Cp, codepoints, is_alpha, is_digit, is_inner_uk_apostrophe, is_latin, is_space, is_uk,
+    is_word_mark, lower_ascii_ukrainian, smile_at,
 };
-use super::{push_substring, Substring};
+use super::{Substring, push_substring};
 
 const TOKEN_PUNCT: &str = "\\/!#$%&*+,.:;<=>?@^_`|~№…‑–—−-«“‘»”’\"„'()[]{}";
 

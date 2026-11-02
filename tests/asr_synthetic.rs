@@ -11,7 +11,7 @@
 //!
 //! Run just these with: `cargo test --test asr_synthetic`
 
-use ukrainian_tn::uktextnorm::{normalize_with, InputTolerance, NormalizeOptions};
+use ukrainian_tn::uktextnorm::{InputTolerance, NormalizeOptions, normalize_with};
 
 // --- A tiny deterministic PRNG (xorshift) so runs are reproducible -----------
 
@@ -31,7 +31,7 @@ impl Rng {
     }
     /// True with probability `1/n`.
     fn chance(&mut self, n: u64) -> bool {
-        self.next() % n == 0
+        self.next().is_multiple_of(n)
     }
 }
 

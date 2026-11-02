@@ -34,10 +34,10 @@ pub(crate) fn feminine_last(words: &mut [String]) {
 
 /// Rewrites a trailing `один` into its neuter form.
 pub(crate) fn neuter_last(words: &mut [String]) {
-    if let Some(last) = words.last_mut() {
-        if last == "один" {
-            *last = "одне".into();
-        }
+    if let Some(last) = words.last_mut()
+        && last == "один"
+    {
+        *last = "одне".into();
     }
 }
 

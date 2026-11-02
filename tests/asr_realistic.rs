@@ -7,7 +7,7 @@
 //!
 //! Run just these with: `cargo test --test asr_realistic`
 
-use ukrainian_tn::uktextnorm::{normalize_with, InputTolerance, NormalizeOptions};
+use ukrainian_tn::uktextnorm::{InputTolerance, NormalizeOptions, normalize_with};
 
 fn asr() -> NormalizeOptions {
     NormalizeOptions { input_tolerance: InputTolerance::Asr, ..NormalizeOptions::default() }

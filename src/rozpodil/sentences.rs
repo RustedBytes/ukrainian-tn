@@ -2,10 +2,10 @@
 
 use super::abbrev;
 use super::chars::{
-    codepoints, is_alpha, is_digit, is_lower_alpha, is_space, is_upper_one, is_word_cp,
-    is_word_letter, lower_ascii_ukrainian, smile_at, Cp,
+    Cp, codepoints, is_alpha, is_digit, is_lower_alpha, is_space, is_upper_one, is_word_cp,
+    is_word_letter, lower_ascii_ukrainian, smile_at,
 };
-use super::{push_substring, Substring};
+use super::{Substring, push_substring};
 
 const ENDINGS: &str = ".?!…";
 const DASHES: &str = "‑–—−-";

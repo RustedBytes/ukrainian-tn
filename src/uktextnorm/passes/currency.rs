@@ -13,7 +13,7 @@ use crate::uktextnorm::patterns::{
 };
 use crate::uktextnorm::re::{cap, compile, compile_i, sub, sub_ctx, whole};
 use crate::uktextnorm::readers::{
-    finance_amount_words, finance_amount_words_parts, spell_identifier_letters, FINANCE_UNITS,
+    FINANCE_UNITS, finance_amount_words, finance_amount_words_parts, spell_identifier_letters,
 };
 use crate::uktextnorm::text::{
     capitalize_first_letter, join, lower_text, regex_alternation, split_words, try_parse_u64,

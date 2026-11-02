@@ -8,11 +8,11 @@ use fancy_regex::Regex;
 
 use crate::uktextnorm::numbers::{number_to_words, number_to_words_digit_by_digit, ordinal_words};
 use crate::uktextnorm::re::{cap, compile, compile_i, sub, whole};
-use crate::uktextnorm::readers::{read_identifier_number, spell_identifier_letters, ENGLISH_WORDS};
+use crate::uktextnorm::readers::{ENGLISH_WORDS, read_identifier_number, spell_identifier_letters};
 use crate::uktextnorm::text::{
     is_uk, is_upper_uk, is_word_joiner, join, lower_text, try_parse_u64,
 };
-use crate::uktextnorm::{fuzzy_match, lexicon, InputTolerance};
+use crate::uktextnorm::{InputTolerance, fuzzy_match, lexicon};
 
 /// How each Latin letter is named when read aloud in Ukrainian.
 #[rustfmt::skip]
@@ -422,12 +422,11 @@ pub(crate) fn canonicalize_asr(
                 return word.to_owned(); // exact phonetic-key hit
             }
             let keys = user_index.keys().map(String::as_str);
-            if let Some((hit, _)) = fuzzy_match::best_fuzzy_match(&needle, keys) {
-                if let Some(&word) = user_index.get(hit) {
-                    if word.chars().count() >= 4 {
-                        return word.to_owned();
-                    }
-                }
+            if let Some((hit, _)) = fuzzy_match::best_fuzzy_match(&needle, keys)
+                && let Some(&word) = user_index.get(hit)
+                && word.chars().count() >= 4
+            {
+                return word.to_owned();
             }
         }
 

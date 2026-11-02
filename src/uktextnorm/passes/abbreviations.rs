@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::sync::LazyLock;
 
 use crate::uktextnorm::lexicon;
-use crate::uktextnorm::morphology::{pronunciation, TRANSLITERATION};
+use crate::uktextnorm::morphology::{TRANSLITERATION, pronunciation};
 use crate::uktextnorm::readers::ABBREVIATIONS;
 use crate::uktextnorm::text::{
     capitalize_first_letter, compact_spaces_lower, is_latin, is_uk, is_upper_uk, lower_cp,

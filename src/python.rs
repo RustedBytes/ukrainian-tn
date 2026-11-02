@@ -158,13 +158,7 @@ mod bindings {
     }
 
     /// Configuration for `normalize_with` and `flag_uncertain_with`.
-    #[pyclass(
-        name = "NormalizeOptions",
-        module = "ukrainian_tn",
-        get_all,
-        set_all,
-        skip_from_py_object
-    )]
+    #[pyclass(name = "NormalizeOptions", module = "ukrainian_tn", get_all, set_all)]
     #[derive(Clone)]
     struct PyNormalizeOptions {
         expand_known_acronyms: bool,
@@ -310,7 +304,7 @@ mod bindings {
     }
 
     /// A sentence or token with UTF-8 byte offsets into the input.
-    #[pyclass(name = "Span", module = "ukrainian_tn", frozen, get_all, skip_from_py_object)]
+    #[pyclass(name = "Span", module = "ukrainian_tn", frozen, get_all)]
     #[derive(Clone)]
     struct PySpan {
         start: usize,
@@ -332,13 +326,7 @@ mod bindings {
     }
 
     /// An input span whose spoken interpretation may be ambiguous.
-    #[pyclass(
-        name = "UncertainSpan",
-        module = "ukrainian_tn",
-        frozen,
-        get_all,
-        skip_from_py_object
-    )]
+    #[pyclass(name = "UncertainSpan", module = "ukrainian_tn", frozen, get_all)]
     #[derive(Clone)]
     struct PyUncertainSpan {
         start: usize,

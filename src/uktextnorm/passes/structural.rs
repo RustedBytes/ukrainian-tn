@@ -346,14 +346,13 @@ pub(crate) fn normalize_addresses(text: &str) -> String {
         let (start, end) = (group.start(), group.end());
 
         // An abbreviation must start a token.
-        if let Some(previous) = text[..start].chars().next_back() {
-            if is_uk_letter(previous)
+        if let Some(previous) = text[..start].chars().next_back()
+            && (is_uk_letter(previous)
                 || is_latin(previous)
                 || previous.is_ascii_digit()
-                || previous == '/'
-            {
-                return whole(m).to_owned();
-            }
+                || previous == '/')
+        {
+            return whole(m).to_owned();
         }
         // These three only introduce a proper name or a number.
         if matches!(key.as_str(), "м" | "с" | "корп") {
@@ -373,10 +372,10 @@ pub(crate) fn normalize_addresses(text: &str) -> String {
             }
             // "м. Києва" is an unambiguous genitive even with no preposition.
             let following = text[end..].trim_start();
-            if let Some(rest) = following.strip_prefix("Києва") {
-                if !rest.chars().next().is_some_and(is_uk_letter) {
-                    return "міста".to_owned();
-                }
+            if let Some(rest) = following.strip_prefix("Києва")
+                && !rest.chars().next().is_some_and(is_uk_letter)
+            {
+                return "міста".to_owned();
             }
         }
         // Here "с." is the speed-of-light variable ending a sentence, not a
@@ -434,12 +433,11 @@ pub(crate) fn normalize_sections(text: &str) -> String {
     sub_ctx(text, &RE, |m, prefix| {
         let key = lower_text(cap(m, 2));
         // "XX ст." is a century, not an article reference.
-        if key == "ст" {
-            if let Ok(Some(previous)) = TRAILING_ROMAN.captures(prefix) {
-                if valid_roman(previous.get(1).map_or("", |g| g.as_str())) {
-                    return whole(m).to_owned();
-                }
-            }
+        if key == "ст"
+            && let Ok(Some(previous)) = TRAILING_ROMAN.captures(prefix)
+            && valid_roman(previous.get(1).map_or("", |g| g.as_str()))
+        {
+            return whole(m).to_owned();
         }
         match SECTION.get(key.as_str()) {
             Some(word) => format!("{}{word} ", cap(m, 1)),

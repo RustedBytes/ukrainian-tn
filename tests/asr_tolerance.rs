@@ -5,8 +5,8 @@
 //! input, and confirm both the reading and the uncertainty report.
 
 use ukrainian_tn::uktextnorm::{
-    flag_uncertain_with, normalize_with, parse_asr_vocabulary, InputTolerance, NormalizeOptions,
-    UncertaintyCategory,
+    InputTolerance, NormalizeOptions, UncertaintyCategory, flag_uncertain_with, normalize_with,
+    parse_asr_vocabulary,
 };
 
 fn asr_options() -> NormalizeOptions {

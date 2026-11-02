@@ -2,7 +2,7 @@
 
 use super::lexicon::Forms;
 use super::morphology::{
-    feminine_last, inflect_ordinal, neuter_last, plural, CARDINAL_TO_ORDINAL, CASE_FORMS,
+    CARDINAL_TO_ORDINAL, CASE_FORMS, feminine_last, inflect_ordinal, neuter_last, plural,
 };
 use super::text::{join, split_words, try_parse_u64};
 
@@ -208,7 +208,7 @@ pub fn number_to_ordinal_words(n: u64, form: OrdinalForm) -> String {
 
 pub(crate) fn ordinal_words(n: u64, form: &str) -> String {
     // Round thousands have a dedicated stem: 3000 -> трьохтисячний.
-    if (2000..=9000).contains(&n) && n % 1000 == 0 {
+    if (2000..=9000).contains(&n) && n.is_multiple_of(1000) {
         const PREFIXES: [&str; 10] =
             ["", "", "двох", "трьох", "чотирьох", "п'яти", "шести", "семи", "восьми", "дев'яти"];
         return inflect_ordinal(&format!("{}тисячний", PREFIXES[(n / 1000) as usize]), form);

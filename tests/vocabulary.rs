@@ -1,8 +1,8 @@
 //! Loading and applying user-supplied word readings.
 
 use ukrainian_tn::uktextnorm::{
-    load_vocabulary_tsv, normalize, normalize_with, parse_vocabulary, NormalizeOptions,
-    VocabularyError,
+    NormalizeOptions, VocabularyError, load_vocabulary_tsv, normalize, normalize_with,
+    parse_vocabulary,
 };
 
 const FIXTURE: &str = "tests/data/custom_vocabulary.tsv";

@@ -4,23 +4,24 @@
 use fancy_regex::{Captures, Regex};
 use std::fmt::Write as _;
 
+use crate::uktextnorm::RangeStyle;
 use crate::uktextnorm::lexicon::{self, Forms, Gender};
 use crate::uktextnorm::morphology::plural;
 use crate::uktextnorm::numbers::{
-    hours_words, minutes_words, number_to_words, number_to_words_case_str, number_words_for_case,
-    ordinal_words, say_fraction, signed_number_words, take_spoken_sign, MINUTE_FORMS, SECOND_FORMS,
+    MINUTE_FORMS, SECOND_FORMS, hours_words, minutes_words, number_to_words,
+    number_to_words_case_str, number_words_for_case, ordinal_words, say_fraction,
+    signed_number_words, take_spoken_sign,
 };
 use crate::uktextnorm::patterns::{
     CURRENCY_TOKEN_ALT, MONTH_ALT, RANGE_PREFIX, RANGE_SEPARATOR, SIGNED_NUMBER, UNIT_ALT,
 };
-use crate::uktextnorm::re::{cap, compile, matched, sub, sub_around, sub_ctx, whole, MatchContext};
+use crate::uktextnorm::re::{MatchContext, cap, compile, matched, sub, sub_around, sub_ctx, whole};
 use crate::uktextnorm::readers::MEASUREMENTS;
 use crate::uktextnorm::temperature::{
-    temperature_quantity_words, temperature_range_unit, temperature_scale, Scale,
-    TEMPERATURE_UNIT_PATTERN,
+    Scale, TEMPERATURE_UNIT_PATTERN, temperature_quantity_words, temperature_range_unit,
+    temperature_scale,
 };
 use crate::uktextnorm::text::{join, lower_text, parse_u64, try_parse_u64};
-use crate::uktextnorm::RangeStyle;
 use std::sync::LazyLock;
 
 /// Nothing else may follow a number that closes a range.
@@ -159,11 +160,7 @@ impl Ranges {
             && context != Governed::On
             && context != Governed::In)
             || explicitly_from_to;
-        if genitive {
-            "gen"
-        } else {
-            "nom"
-        }
+        if genitive { "gen" } else { "nom" }
     }
 }
 
@@ -319,7 +316,7 @@ pub(crate) fn normalize_ranges(text: &str, style: RangeStyle) -> String {
     let text = sub(&text, &ABBREVIATED_DECADE_RANGE, |m| {
         let first = parse_u64(cap(m, 1));
         let second = expanded_short_year(first, parse_u64(cap(m, 2)));
-        if first / 100 != second / 100 || first % 10 != 0 || second % 10 != 0 {
+        if first / 100 != second / 100 || !first.is_multiple_of(10) || !second.is_multiple_of(10) {
             return whole(m).to_owned();
         }
         let form = if matches!(cap(m, 3), "і" | "ї") { "nom_pl" } else { "pl" };
@@ -679,23 +676,25 @@ pub(crate) fn normalize_ranges(text: &str, style: RangeStyle) -> String {
 
     let say_bare = |m: &Captures<'_, str>, ctx: &MatchContext<'_>, explicitly_from_to: bool| {
         // A four-digit bound followed by a short one is a year span, read elsewhere.
-        if !explicitly_from_to && cap(m, 2).len() == 4 && cap(m, 3).len() <= 2 {
-            if let Some(year) = try_parse_u64(cap(m, 2)) {
-                if (1000..=2999).contains(&year) {
-                    return whole(m).to_owned();
-                }
-            }
+        if !explicitly_from_to
+            && cap(m, 2).len() == 4
+            && cap(m, 3).len() <= 2
+            && let Some(year) = try_parse_u64(cap(m, 2))
+            && (1000..=2999).contains(&year)
+        {
+            return whole(m).to_owned();
         }
         let context = ranges.governed(ctx.prefix, cap(m, 1), explicitly_from_to);
-        if context == Governed::In && ctx.suffix.starts_with(" класах") {
-            if let (Some(low), Some(high)) = (try_parse_u64(cap(m, 2)), try_parse_u64(cap(m, 3))) {
-                return format!(
-                    "{}{}–{}",
-                    cap(m, 1),
-                    number_to_words_case_str(low, "prep"),
-                    number_to_words_case_str(high, "prep")
-                );
-            }
+        if context == Governed::In
+            && ctx.suffix.starts_with(" класах")
+            && let (Some(low), Some(high)) = (try_parse_u64(cap(m, 2)), try_parse_u64(cap(m, 3)))
+        {
+            return format!(
+                "{}{}–{}",
+                cap(m, 1),
+                number_to_words_case_str(low, "prep"),
+                number_to_words_case_str(high, "prep")
+            );
         }
         let case = ranges.case(ctx.prefix, cap(m, 1), explicitly_from_to);
         let gender = if context == Governed::In && ctx.suffix.starts_with(" лінії") {

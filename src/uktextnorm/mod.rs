@@ -26,8 +26,8 @@ mod validation;
 mod vocabulary;
 
 pub use numbers::{
-    number_to_ordinal_words, number_to_words, number_to_words_case, number_to_words_digit_by_digit,
-    GrammaticalCase, OrdinalForm, MAX_SPELLED_NUMBER,
+    GrammaticalCase, MAX_SPELLED_NUMBER, OrdinalForm, number_to_ordinal_words, number_to_words,
+    number_to_words_case, number_to_words_digit_by_digit,
 };
 pub use options::{
     ColonStyle, CurrencySymbolPolicy, DateStyle, InputTolerance, NormalizeOptions, NormalizePreset,
@@ -36,9 +36,9 @@ pub use options::{
 pub use passes::{expand_abbreviations, normalize_abbreviations, transliterate_to_cyrillic};
 pub use pipeline::{normalize, normalize_preset, normalize_with};
 pub use uncertainty::{
-    flag_uncertain, flag_uncertain_with, UncertainSpan, UncertaintyCategory, UncertaintySeverity,
+    UncertainSpan, UncertaintyCategory, UncertaintySeverity, flag_uncertain, flag_uncertain_with,
 };
 pub use vocabulary::{
-    load_asr_vocabulary_tsv, load_vocabulary_tsv, parse_asr_vocabulary, parse_vocabulary,
-    VocabularyError,
+    VocabularyError, load_asr_vocabulary_tsv, load_vocabulary_tsv, parse_asr_vocabulary,
+    parse_vocabulary,
 };

@@ -3,6 +3,7 @@
 use std::collections::HashMap;
 use std::sync::LazyLock;
 
+use super::PhoneStyle;
 use super::lexicon::{self, FinanceUnit, Gender, Unit};
 use super::morphology::{feminine_last, plural, plural_of, pronunciation};
 use super::numbers::{
@@ -11,7 +12,6 @@ use super::numbers::{
 };
 use super::text::{is_uk, join, parse_u64, split_words, try_parse_u64, upper_cp};
 use super::validation::{roman_to_int, valid_roman};
-use super::PhoneStyle;
 
 /// Units of measure keyed by their written abbreviation.
 pub(crate) static MEASUREMENTS: LazyLock<HashMap<&'static str, &'static Unit>> =

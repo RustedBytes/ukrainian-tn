@@ -103,7 +103,7 @@ fn pairs(source: &'static str, header: &str) -> Vec<Pair> {
 }
 
 macro_rules! table {
-    ($name:ident, $ty:ty, $file:literal, $header:literal, $row:expr) => {
+    ($name:ident, $ty:ty, $file:literal, $header:literal, $row:expr_2021) => {
         pub(crate) static $name: LazyLock<Vec<$ty>> = LazyLock::new(|| {
             rows(include_str!(concat!("../../data/lexicons/", $file)), $header)
                 .into_iter()

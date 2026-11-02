@@ -7,7 +7,7 @@ use std::fmt::Write as _;
 use std::sync::LazyLock;
 
 use crate::uktextnorm::lexicon::Gender;
-use crate::uktextnorm::morphology::{plural, CASE_FORMS, COMPOUND_PREFIX_FORMS};
+use crate::uktextnorm::morphology::{CASE_FORMS, COMPOUND_PREFIX_FORMS, plural};
 use crate::uktextnorm::numbers::{
     number_to_words, number_to_words_case_str, number_words_for_gender, ordinal_words,
     prefers_many_after_genitive_number,

@@ -54,7 +54,7 @@ virtual environment, install `maturin`, then run:
 maturin develop --release
 ```
 
-The bindings use PyO3's stable ABI for Python 3.8 and newer. In Cargo, PyO3 is
+The bindings use PyO3's stable ABI for Python 3.9 and newer. In Cargo, PyO3 is
 optional and is enabled only by the `python` feature; ordinary Rust builds do
 not compile or link Python support.
 
@@ -291,9 +291,11 @@ checks each table for duplicate keys, out-of-range values and empty columns.
 
 ## Development
 
+Requires Rust 1.99 or newer (edition 2024).
+
 ```sh
 cargo test
-cargo clippy --all-targets
+cargo clippy --all-targets --all-features -- -W clippy::pedantic -D warnings
 cargo fmt --all
 ```
 
@@ -307,6 +309,38 @@ The test suite has four parts:
   produce spans that disagree with the source.
 - `tests/rozpodil.rs` and `tests/vocabulary.rs` — segmentation and vocabulary
   loading.
+
+## Benchmarks
+
+Run the Criterion suite in the optimized bench profile:
+
+```sh
+cargo +1.99.0 bench --locked --bench text_processing -- --noplot
+```
+
+Baseline measured on 2026-11-02 with Rust 1.99.0, Criterion 0.8.2,
+fancy-regex 0.20.0, default features, and the system allocator on Linux x86_64
+(Intel Core i9-9900K @ 3.60 GHz, 8 cores / 16 threads). Each benchmark uses
+100 samples, a 3-second warm-up and a 5-second target measurement period.
+Times below are arithmetic means per call with 95% confidence intervals.
+
+| Benchmark | Input | Mean | 95% confidence interval |
+| --- | --- | --- | --- |
+| `normalize/mixed` | 193 bytes | 14.119 ms | 14.080–14.161 ms |
+| `normalize/asr` | 77 bytes | 10.553 ms | 10.526–10.579 ms |
+| `segmentation/tokenize` | 6176 bytes | 65.585 µs | 65.323–65.851 µs |
+| `segmentation/sentences` | 6176 bytes | 229.882 µs | 229.338–230.500 µs |
+| `number_to_words` | `123_456_789` | 819.517 ns | 817.267–821.792 ns |
+
+`normalize/mixed` covers an address, date, time, currency, measurement,
+temperature and brands. `normalize/asr` covers distorted brand/acronym
+spellings and split words with ASR tolerance enabled. Segmentation processes
+32 copies of the mixed input. Inputs and options are constructed outside the
+timed loops, normalization regexes and lexicons are initialized before timing,
+and `std::hint::black_box` protects inputs from optimization. Output allocation
+and destruction are included. These are local steady-state measurements;
+results vary with hardware and system load and exclude cold-start costs.
+Criterion stores raw samples and estimates under `target/criterion/`.
 
 ## License
 

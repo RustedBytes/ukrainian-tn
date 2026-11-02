@@ -32,11 +32,7 @@ use super::text::lower_cp;
 /// needs more than this to reach any lexicon entry is not a confident match and
 /// is left alone.
 fn distance_budget(key_len: usize) -> usize {
-    if key_len <= 4 {
-        1
-    } else {
-        2
-    }
+    if key_len <= 4 { 1 } else { 2 }
 }
 
 /// Folds a token to a canonical phonetic key that ignores the spellings ASR
@@ -259,10 +255,10 @@ pub(crate) fn resolve<'a>(
             }
         }
     }
-    if let Some(reading) = canonical {
-        if !canonical_tied {
-            return Some((reading, MatchKind::Canonical));
-        }
+    if let Some(reading) = canonical
+        && !canonical_tied
+    {
+        return Some((reading, MatchKind::Canonical));
     }
 
     // Stage 3: closest canonical key within the edit-distance budget.

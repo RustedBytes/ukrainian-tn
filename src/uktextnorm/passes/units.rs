@@ -9,20 +9,20 @@ use std::sync::LazyLock;
 use crate::uktextnorm::lexicon::{Forms, Gender};
 use crate::uktextnorm::morphology::{feminine_last, plural, plural_of};
 use crate::uktextnorm::numbers::{
-    decimal_to_words, decimal_to_words_or_digits, hours_words, minutes_words,
-    number_digits_or_words, number_to_words, number_to_words_case_str,
+    MINUTE_FORMS, SECOND_FORMS, decimal_to_words, decimal_to_words_or_digits, hours_words,
+    minutes_words, number_digits_or_words, number_to_words, number_to_words_case_str,
     number_to_words_digit_by_digit, number_words_for_gender, ordinal_words, say_fraction,
-    signed_number_words, take_spoken_sign, MINUTE_FORMS, SECOND_FORMS,
+    signed_number_words, take_spoken_sign,
 };
 use crate::uktextnorm::patterns::{MEASUREMENTS_RE, RANGE_PREFIX, SIGNED_NUMBER, UNIT_ALT};
 use crate::uktextnorm::re::{
     cap, cap_start, compile, compile_i, matched, sub, sub_around, sub_ctx, whole,
 };
 use crate::uktextnorm::readers::{
-    read_dotted, read_measurement_quantity, spell_identifier_letters, MEASUREMENTS,
+    MEASUREMENTS, read_dotted, read_measurement_quantity, spell_identifier_letters,
 };
 use crate::uktextnorm::temperature::{
-    temperature_quantity_words, temperature_scale, TEMPERATURE_UNIT_PATTERN,
+    TEMPERATURE_UNIT_PATTERN, temperature_quantity_words, temperature_scale,
 };
 use crate::uktextnorm::text::{
     join, lower_text, parse_i32, parse_u64, regex_alternation, split_words, try_parse_u64,
@@ -111,15 +111,7 @@ pub(crate) fn normalize_time(text: &str, colon_style: ColonStyle) -> String {
         }
         let period = lower_text(cap(m, 5));
         let pm = period.starts_with('p');
-        let clock_hour = if hour == 12 {
-            if pm {
-                12
-            } else {
-                0
-            }
-        } else {
-            hour
-        };
+        let clock_hour = if hour == 12 { if pm { 12 } else { 0 } } else { hour };
         let suffix = if !pm && hour == 12 {
             ""
         } else if pm && (hour < 6 || hour == 12) {
@@ -539,11 +531,7 @@ pub(crate) fn normalize_measurements(text: &str) -> String {
             previous_end = found.end();
             pos = found.end().max(found.start() + 1);
         }
-        if first {
-            whole(m).to_owned()
-        } else {
-            out
-        }
+        if first { whole(m).to_owned() } else { out }
     });
 
     sub(&text, &MEASUREMENTS_RE, |m| match MEASUREMENTS.get(cap(m, 3)) {

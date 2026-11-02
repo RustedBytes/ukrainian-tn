@@ -62,11 +62,7 @@ fn valid_ipv6(value: &str) -> bool {
         .map(|g| (g.len() <= 4 && g.bytes().all(|b| b.is_ascii_hexdigit())).then_some(()))
         .collect::<Option<Vec<_>>>();
     let Some(groups) = groups else { return false };
-    if compressed {
-        groups.len() < 8
-    } else {
-        groups.len() == 8
-    }
+    if compressed { groups.len() < 8 } else { groups.len() == 8 }
 }
 
 fn read_ipv6_address(value: &str) -> Option<String> {

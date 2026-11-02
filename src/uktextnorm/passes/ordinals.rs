@@ -5,6 +5,7 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 use std::sync::LazyLock;
 
+use crate::uktextnorm::RangeStyle;
 use crate::uktextnorm::lexicon::Forms;
 use crate::uktextnorm::morphology::plural;
 use crate::uktextnorm::numbers::{
@@ -14,7 +15,6 @@ use crate::uktextnorm::re::{cap, compile, compile_i, matched, sub, sub_around, s
 use crate::uktextnorm::readers::read_dotted;
 use crate::uktextnorm::text::{lower_text, parse_u64, try_parse_u64};
 use crate::uktextnorm::validation::{roman_to_int, valid_roman};
-use crate::uktextnorm::RangeStyle;
 
 /// The grammatical form each ordinal suffix stands for.
 #[rustfmt::skip]
@@ -116,11 +116,7 @@ pub(crate) fn normalize_ordinals(text: &str) -> String {
             "nom_n"
         };
         let noun = if noun.starts_with("сторіч") {
-            if locative {
-                " сторіччі"
-            } else {
-                " сторіччя"
-            }
+            if locative { " сторіччі" } else { " сторіччя" }
         } else if locative {
             " столітті"
         } else {

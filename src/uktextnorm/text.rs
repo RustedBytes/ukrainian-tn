@@ -136,11 +136,7 @@ pub(crate) fn parse_i32(text: &str) -> i32 {
     let digits = text.strip_prefix('-').unwrap_or(text);
     let end = digits.bytes().take_while(u8::is_ascii_digit).count();
     let value: i32 = digits[..end].parse().unwrap_or(0);
-    if text.starts_with('-') {
-        -value
-    } else {
-        value
-    }
+    if text.starts_with('-') { -value } else { value }
 }
 
 /// A word span in the source text, used when reporting uncertainty.
@@ -160,10 +156,10 @@ pub(crate) fn uncertain_word_spans(text: &str) -> Vec<WordSpan> {
     let mut stop = 0;
     let mut has_letter = false;
     let mut flush = |start: &mut Option<usize>, stop: usize, has_letter: &mut bool| {
-        if let Some(s) = start.take() {
-            if *has_letter {
-                spans.push(WordSpan { start: s, stop });
-            }
+        if let Some(s) = start.take()
+            && *has_letter
+        {
+            spans.push(WordSpan { start: s, stop });
         }
         *has_letter = false;
     };

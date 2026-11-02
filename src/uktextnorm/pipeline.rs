@@ -338,11 +338,7 @@ fn protect_opaque_markup(
         compile_i(r"\bISBN(?:-1[03])?\s*[:№#]?\s*((?:97[89][ -]?)?[0-9Xx](?:[ -]?[0-9Xx]){8,12})\b")
     });
     text = sub(&text, &ISBN_CANDIDATE, |m| {
-        if valid_isbn(cap(m, 1)) {
-            whole(m).to_owned()
-        } else {
-            protected.protect(whole(m))
-        }
+        if valid_isbn(cap(m, 1)) { whole(m).to_owned() } else { protected.protect(whole(m)) }
     });
 
     static LABELLED_HASH_CANDIDATE: LazyLock<Regex> = LazyLock::new(|| {
@@ -524,11 +520,7 @@ fn protect_opaque_markup(
             || minutes > 59
             || seconds > 59
             || (degrees == limit && (minutes != 0 || fractional_minutes || seconds != 0));
-        if invalid {
-            protected.protect(whole(m))
-        } else {
-            whole(m).to_owned()
-        }
+        if invalid { protected.protect(whole(m)) } else { whole(m).to_owned() }
     });
 
     if options.validate_dates {
@@ -548,11 +540,7 @@ fn protect_opaque_markup(
             let second = parse_i32(cap(m, 3));
             let short_year = parse_i32(cap(m, 4));
             let year = if cap(m, 4).len() == 2 {
-                if short_year < 50 {
-                    2000 + short_year
-                } else {
-                    1900 + short_year
-                }
+                if short_year < 50 { 2000 + short_year } else { 1900 + short_year }
             } else {
                 short_year
             };
@@ -585,11 +573,7 @@ fn protect_opaque_markup(
         text = sub(&text, &ISO_WEEK, |m| {
             let valid = is_valid_iso_week(parse_i32(cap(m, 1)), parse_i32(cap(m, 2)))
                 && (!matched(m, 3) || (1..=7).contains(&parse_i32(cap(m, 3))));
-            if valid {
-                whole(m).to_owned()
-            } else {
-                protected.protect(whole(m))
-            }
+            if valid { whole(m).to_owned() } else { protected.protect(whole(m)) }
         });
 
         static ISO_ORDINAL: LazyLock<Regex> = LazyLock::new(|| compile(r"\b(\d{4})-(\d{3})\b"));

@@ -624,7 +624,7 @@ fn flag_uncertain_impl(text: &str, options: Option<&NormalizeOptions>) -> Vec<Un
 
     /// Reports a whole match when a checksum does not hold.
     macro_rules! checked {
-        ($re:expr, $group:expr, $check:expr, $reason:expr) => {
+        ($re:expr_2021, $group:expr_2021, $check:expr_2021, $reason:expr_2021) => {
             each(text, $re, |m| {
                 if !$check(cap(m, $group)) {
                     c.add(cap_start(m, 0), end_of(m), $reason, Cat::Identifier, Sev::Error);
@@ -799,10 +799,10 @@ fn flag_uncertain_impl(text: &str, options: Option<&NormalizeOptions>) -> Vec<Un
                 return;
             }
             // Latin c is a common homoglyph in a /с rate.
-            if let Some(base) = full_unit.strip_suffix("/c") {
-                if MEASUREMENTS.contains_key(format!("{base}/с").as_str()) {
-                    return;
-                }
+            if let Some(base) = full_unit.strip_suffix("/c")
+                && MEASUREMENTS.contains_key(format!("{base}/с").as_str())
+            {
+                return;
             }
         }
         c.add(start, end, "unknown unit or unsupported unit spelling", Cat::Unit, Sev::Warning);
