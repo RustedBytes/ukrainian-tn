@@ -7,12 +7,20 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-02
+
 ### Added
 
 - Added optional Python bindings powered by PyO3. The `ukrainian-tn` PyPI
   package exposes normalization, segmentation, number reading, uncertainty,
   and vocabulary APIs through the `ukrainian_tn` module when the `python`
   Cargo feature is enabled.
+
+### Changed
+
+- Migrated to Rust edition 2024 and raised the minimum Rust version to 1.99.
+- Updated dependencies, including PyO3 0.30.1; Python now requires 3.9 or newer.
+- Added Criterion benchmarks and documented measured results in the README.
 
 ## [0.5.0] - 2026-09-20
 

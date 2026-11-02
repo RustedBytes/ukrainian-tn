@@ -12,7 +12,7 @@ identifiers and web addresses — and splits text into sentences and tokens.
 
 ```toml
 [dependencies]
-ukrainian-tn = "0.6"
+ukrainian-tn = "0.7"
 ```
 
 ```rust
